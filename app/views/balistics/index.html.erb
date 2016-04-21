@@ -1,0 +1,52 @@
+<h1 class="text-center">Balistic Calculator</h1>
+<div id="b_calc" class="row">
+  <div id="input" class="col-md-4">
+    <div id="messages"></div>
+    <div class="form-group">
+      <label for="">Velocity Of Projectile</label>
+      <input id="velocity" type="text" name="velocity" value="" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="">Target Distance</label>
+      <input id="distance" type="text" name="distance" value="" class="form-control">
+    </div>
+    <div class="form-group">
+      <button onClick="calculateDistance()" class="form-control btn-primary">Calculate</button>
+    </div>
+  </div>
+  <div id="output" class="col-md-7">
+    <div id="answer" class="text-center">
+      <h4>Aim Above <div id="answer_output"></div> meters Your Traget</h4>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function calculateDistance() {
+    var v = parseFloat($('#velocity').val());
+    var s = parseFloat($('#distance').val());
+    console.log(s)
+    $('#messages').empty()
+    if (typeof v === "number" && typeof s === "number" && !isNaN(v) && !isNaN(s)) {
+      var payload = {
+        "knowns": {
+         "velocity": v,
+         "distance": s
+       }
+      }
+      console.log(payload)
+      $.ajax({
+        type: "POST",
+        url: '/balistics/distance_above',
+        data: payload,
+        success: function(response){
+          console.log(response)
+          $('#answer_output').text(response.theta)
+        },
+        error: function(){
+        }
+      });
+    }else{
+      $('#messages').append('<div class="alert alert-danger" role="alert">One or more inputs are not numbers!!!</div>')
+    }
+  }
+</script>
